@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Penghitung Umur 3D</title>
+    <style>
+        /* Universal Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #141E30, #243B55);
+            perspective: 1000px;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* 3D Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            background-color: #F1F1F1;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 -10px 40px rgba(255, 255, 255, 0.2);
+            transform-style: preserve-3d;
+        }
+
+        /* Title Styling */
+        .title {
+            text-align: center;
+            font-size: 2.4rem;
+            margin-bottom: 30px;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        /* Form Fields */
+        .input-field {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        label {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            background: #e3e4e6;
+            box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -3px -3px 6px rgba(255, 255, 255, 0.7);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="date"]:focus {
+            box-shadow: inset 5px 5px 12px rgba(0, 0, 0, 0.2), inset -5px -5px 12px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 3D Button */
+        button.calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2), 0px -2px 10px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        button.calculate-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3), 0px -5px 20px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Like Button Styling */
+        button.like-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2), 0px -2px 10px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button.like-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3), 0px -5px 20px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Result Styling */
+        .result {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f0f4f8;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            color: #333;
+            text-align: center;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2), -3px -3px 6px rgba(255, 255, 255, 0.6);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .result p {
+            margin: 15px 0;
+            font-size: 1.4rem;
+            color: #444;
+        }
+
+        /* Footer Styling */
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            background-color: #141E30;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* Media Queries for Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            button.calculate-btn,
+            button.like-btn {
+                font-size: 1.3rem;
+            }
+
+            .result p {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Penghitung Umur</h1>
+        <form id="ageForm">
+            <div class="input-field">
+                <label for="birthdate">Masukkan Tanggal Lahir Anda:</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+            </div>
+            <button type="submit" class="calculate-btn">Hitung Umur</button>
+        </form>
+        <div id="result" class="result hidden">
+            <p>Umur Anda: <span id="age"></span></p>
+            <p>Bulan dan Hari Lahir: <span id="birth-month-day"></span></p>
+            <p>Ulang Tahun Berikutnya: <span id="next-birthday"></span></p>
+            <button class="like-btn" id="likeBtn">Like</button>
+            <p id="likeMessage" class="hidden"></p>
+            <p>Total Likes: <span id="totalLikes">0</span></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 INDRA. Semua hak dilindungi.</p>
+        <p>Ikuti kami di <a href="https://www.instagram.com/ndra0216?igsh=MWx5M21ibDFmdmNndw%3D%3D&utm_source=qrtarget="_blank">Instagram</a></p>
+    </footer>
+
+    <script>
+        // Initialize likes in localStorage if not present
+        if (!localStorage.getItem('totalLikes')) {
+            localStorage.setItem('totalLikes', 0);
+        }
+
+        // Update displayed total likes
+        document.getElementById('totalLikes').textContent = localStorage.getItem('totalLikes');
+
+        document.getElementById('ageForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const today = new Date();
+
+            // Menghitung tahun
+            let years = today.getFullYear() - birthdate.getFullYear();
+
+            // Menghitung bulan
+            let months = today.getMonth() - birthdate.getMonth();
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Menghitung bulan dan hari lahir
+            const birthMonth = birthdate.toLocaleString('id-ID', { month: 'long' });
+            const birthDay = birthdate.getDate();
+
+            // Menghitung ulang tahun berikutnya
+            let nextBirthday = new Date(today.getFullYear(), birthdate.getMonth(), birthdate.getDate());
+            if (today > nextBirthday) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const formattedNextBirthday = nextBirthday.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Menampilkan hasil
+            document.getElementById('age').textContent = `${years} tahun dan ${months} bulan`;
+            document.getElementById('birth-month-day').textContent = `${birthMonth} ${birthDay}`;
+            document.getElementById('next-birthday').textContent = formattedNextBirthday;
+
+            document.getElementById('result').classList.remove('hidden');
+        });
+
+        // Like Button Functionality
+        const likeButton = document.getElementById('likeBtn');
+        const likeMessage = document.getElementById('likeMessage');
+
+        likeButton.addEventListener('click', function () {
+            // Check if the user has already liked
+            if (localStorage.getItem('hasLiked')) {
+                likeMessage.textContent = 'Anda sudah menyukai ini.';
+                likeMessage.classList.remove('hidden');
+            } else {
+                localStorage.setItem('hasLiked', 'true');
+                let totalLikes = parseInt(localStorage.getItem('totalLikes')) + 1;
+                localStorage.setItem('totalLikes', totalLikes);
+                document.getElementById('totalLikes').textContent = totalLikes;
+                likeMessage.textContent = 'Terima kasih telah menyukai!';
+                likeMessage.classList.remove('hidden');
+                likeButton.disabled = true; // Disable the button after liking
+            }
+        });
+    </script>
+</body>
+</html>
